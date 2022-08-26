@@ -1,15 +1,20 @@
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Vector;
 
 public class CifrarCodigo {
 
     // Atributos de la clase
     private String palabra = "";
     private String palabraCifrada = "";
+    private ArrayList<Integer> pasa = new ArrayList<Integer>();
+
+
 
     // Constructor de la clase
-    CifrarCodigo (String palabra){
+    CifrarCodigo (String palabra, int desplazar){
         this.palabra = palabra;
-        encriptarPalabra();
+        encriptarPalabra(desplazar);
     }
 
     // Los gets de los atributos
@@ -21,9 +26,42 @@ public class CifrarCodigo {
         return (String) palabraCifrada;
     }
 
-    void encriptarPalabra(){
+    ArrayList<Integer> getPasa(){
+        return pasa;
+    }
+
+    void encriptarPalabra(int desplazar){
+
         for (int i = 0; i < palabra.length(); i++){
-            palabraCifrada += String.valueOf((char) (palabra.charAt(i) + 2));
+            int ascii = 0;
+            if ((int) palabra.charAt(i) >= 65 && (int) palabra.charAt(i) <= 122){
+                while ((int) (palabra.charAt(i) + (desplazar - ascii)) > 122){
+                    ascii += 58;
+                    while ((int) (palabra.charAt(i) + (desplazar - ascii)) >= 91 && (int) (palabra.charAt(i) + (desplazar - ascii)) <= 96){
+                        ascii -= 6;
+                        pasa.add(i);
+                    }
+                }
+
+                while ((int) (palabra.charAt(i) + (desplazar + ascii)) < 65){
+                    ascii += 58;
+                    while ((int) (palabra.charAt(i) + (desplazar - ascii)) >= 91 && (int) (palabra.charAt(i) + (desplazar - ascii)) <= 96){
+                        ascii -= 6;
+                        pasa.add(i);
+                    }
+                }
+
+                while ((int) (palabra.charAt(i) + (desplazar - ascii)) >= 91 && (int) (palabra.charAt(i) + (desplazar - ascii)) <= 96){
+                    ascii -= 6;
+                    pasa.add(i);
+                }
+
+
+                palabraCifrada += String.valueOf((char) (palabra.charAt(i) + (desplazar - ascii)));
+            }else {
+                palabraCifrada += palabra.charAt(i);
+            }
+
         }
     }
 
